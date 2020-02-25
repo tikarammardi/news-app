@@ -1,26 +1,58 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react'
+import axios from 'axios'
+import NewsList from './components/NewsList'
+import SearchBox from './components/SearchBox'
+export default class App extends Component {
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  state = {
+    sources: [],
+
+    searchField: ''
+  }
+
+  async componentDidMount() {
+
+    const res = await axios('https://newsapi.org/v1/sources');
+
+    this.setState({
+      sources: res.data.sources
+    })
+
+  }
+
+  onSearchChange = event => {
+    this.setState({
+      searchField: event.target.value
+    })
+
+    console.log(event.target.value)
+
+
+  }
+
+
+
+  render() {
+
+
+    return (
+      <div className="container">
+        <h1> Today's News</h1>
+        <SearchBox searchChange={this.onSearchChange} />
+
+        <div className="card-column">
+
+
+          <NewsList
+            sources={this.state.sources}
+
+          />
+        </div>
+
+
+
+
+      </div>
+    )
+  }
 }
-
-export default App;
